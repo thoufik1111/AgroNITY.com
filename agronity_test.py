@@ -112,32 +112,9 @@ def load_models():
     except Exception as e:
         print(f"⚠ Error loading sklearn models: {e}")
     
-    # Load agri_ml_model (Random Forest based)
-    try:
-        import json
-        agri_ml_path = os.path.join(MODELS_DIR, "agri_ml_model", "model")
-        if os.path.exists(agri_ml_path):
-            agri_model = joblib.load(os.path.join(agri_ml_path, "agri_model.pkl"))
-            encoders = joblib.load(os.path.join(agri_ml_path, "encoders.pkl"))
-            
-            # Load numeric_cols from columns.json
-            columns_file = os.path.join(agri_ml_path, "columns.json")
-            if os.path.exists(columns_file):
-                with open(columns_file, 'r') as f:
-                    columns_data = json.load(f)
-                    numeric_cols = columns_data.get("numeric_cols", [])
-            else:
-                # Fallback if columns.json doesn't exist
-                numeric_cols = []
-            
-            models["agri_ml"] = {
-                "model": agri_model,
-                "encoders": encoders,
-                "numeric_cols": numeric_cols
-            }
-            print("✓ Agri ML model loaded successfully")
-    except Exception as e:
-        print(f"⚠ Error loading agri_ml model: {e}")
+    # ---- DISABLE AGRI MODEL ON RENDER ----
+    print("⚠ agri_model disabled on Render to prevent backend crash")
+    models["agri_ml"] = None
     
     # Load Keras CNN model for image classification
     if KERAS_AVAILABLE and TF_AVAILABLE:
